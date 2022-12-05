@@ -5,8 +5,6 @@ import Stats from 'three/examples/jsm/libs/stats.module.js'
 
 const scene = new THREE.Scene()
 scene.background = new THREE.Color(0x000000)
-// Add an axis helper to the scene
-// scene.add(new THREE.AxesHelper(5))
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 camera.position.z = 2
 
