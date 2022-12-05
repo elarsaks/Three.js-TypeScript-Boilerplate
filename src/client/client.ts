@@ -1,9 +1,12 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GUI } from 'dat.gui'
+import Stats from 'three/examples/jsm/libs/stats.module.js'
 
 const scene = new THREE.Scene()
 scene.background = new THREE.Color(0x000000)
+// Add an axis helper to the scene
+scene.add(new THREE.AxesHelper(5))
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 camera.position.z = 2
 
@@ -15,17 +18,15 @@ const controls = new OrbitControls(camera, renderer.domElement)
 
 const geometry = new THREE.BoxGeometry()
 const material = new THREE.MeshBasicMaterial({
-    color: 0x00ff00,
+    color: 0x34baeb,
     wireframe: true,
 })
 
 const cube = new THREE.Mesh(geometry, material)
-cube.scale.x = 0.7
-cube.scale.y = 0.7
-cube.scale.z = 0.7
+cube.scale.x = 0.3
+cube.scale.y = 0.3
+cube.scale.z = 0.3
 scene.add(cube)
-
-console.dir(scene)
 
 window.addEventListener('resize', onWindowResize, false)
 function onWindowResize() {
@@ -35,24 +36,46 @@ function onWindowResize() {
     render()
 }
 
+// CUBE GUI
 const gui = new GUI()
 const cubeFolder = gui.addFolder('Cube')
 cubeFolder.open()
-gui.add(cube.scale, 'x', 0, Math.PI * 2)
-gui.add(cube.scale, 'y', 0, Math.PI * 2)
-gui.add(cube.scale, 'z', 0, Math.PI * 2)
 
-const camerFolder = gui.addFolder('Camera')
-camerFolder.add(camera.position, 'z', 0, 20)
-camerFolder.open()
+// Cube Rotation
+const cubeRotationFolder = cubeFolder.addFolder('Rotation')
+cubeRotationFolder.add(cube.rotation, 'x', 0, Math.PI * 2)
+cubeRotationFolder.add(cube.rotation, 'y', 0, Math.PI * 2)
+cubeRotationFolder.add(cube.rotation, 'z', 0, Math.PI * 2)
+cubeRotationFolder.open()
+
+// Cube Position
+const cubePositionFolder = cubeFolder.addFolder('Position')
+cubePositionFolder.add(cube.position, 'x', -10, 10)
+cubePositionFolder.add(cube.position, 'y', -10, 10)
+cubePositionFolder.add(cube.position, 'z', -10, 10)
+cubePositionFolder.open()
+
+// Cube Scale
+const cubeScaleFolder = cubeFolder.addFolder('Scale')
+cubeScaleFolder.add(cube.scale, 'x', 0, 5)
+cubeScaleFolder.add(cube.scale, 'y', 0, 5)
+cubeScaleFolder.add(cube.scale, 'z', 0, 5)
+cubeScaleFolder.open()
+
+// Cube Visibility
+cubeFolder.add(cube, 'visible')
+
+const stats = Stats()
+document.body.appendChild(stats.dom)
 
 function animate() {
     requestAnimationFrame(animate)
 
     cube.rotation.x += 0.01
     cube.rotation.y += 0.01
-    cube.rotation.z += 0.01
+    cube.rotation.z += 0.001
 
+    stats.update()
     controls.update()
 
     render()
